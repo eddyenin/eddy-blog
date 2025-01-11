@@ -17,6 +17,6 @@
         </div>
     </section>
 
-    <x-blog-page :$posts :$categories />
+    <x-blog-page :$posts :$categories  :$start/>
 
 </x-layout>

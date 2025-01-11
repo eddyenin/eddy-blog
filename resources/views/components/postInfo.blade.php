@@ -1,7 +1,10 @@
-@props(['posts','day','month'])
+@props(['posts','day','month','start'])
+
+<?php echo $start; ?>
 
 @foreach ($posts as $post )
 <?php
+
     $d = $post->created_at;
     $unix = strtotime($d);
     $date = getDate($unix);

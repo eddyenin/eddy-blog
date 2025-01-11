@@ -15,21 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-       // User::factory(10)->create();
-        // Category::factory(10)->create();
-        // Post::factory(10)->create();
-        $this->call([
-            Category::factory(10)->create(),
-        ]);
+      $users = User::factory(10)->create();
+      $categories = Category::factory(4)->create();
+
+       Post::factory(50)->recycle($users)->recycle($categories)->create();
 
 
-
-        // User::factory()
-        
-        // ->create([
-        //     'name' => 'Eddy',
-        //     'email' => 'eddyenin6@gmail.com',
-        //     'username' => 'eddyenin'
-        // ]);
     }
 }
