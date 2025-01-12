@@ -8,14 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Post extends Model
 {
+
     use HasFactory;
+    protected $fillable = ['category_id'];
 
     public function category():BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function user():BelongsTo
+    public function users():BelongsTo
     {
         return $this->belongsTo(User::class);
     }
