@@ -15,10 +15,10 @@ class AuthController extends Controller
     public function registerUser(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required'],
-            'username' => ['required'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required','confirmed']
+            'name' => 'required',
+            'username' => 'required',
+            'email' => 'required', 'email', 'unique:users',
+            'password' => 'required','confirmed'
         ]);
 
          $user = User::create($validated);
@@ -36,16 +36,16 @@ class AuthController extends Controller
     public function loginUser(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['email'],
-            'password' => ['required']
+            'email' => 'email',
+            'password' => 'required'
         ]);
 
         if(Auth::attempt($validated, $request->remember)){
             $request->session()->regenerate();
             return redirect()->route('posts.index');
-        }else{
-            return back()->withErrors(['failed' => 'The provided credentials do not match our records']);
         }
+
+        return back()->withErrors(['failed' => 'The provided credentials do not match our records']);
 
     }
 

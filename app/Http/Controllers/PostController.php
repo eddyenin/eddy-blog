@@ -2,29 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
-use Illuminate\Routing\Controllers\Middleware;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
 
-    public function __construct()
-    {
-
-    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $posts = Post::paginate();
+        $posts = Post::with('users')->paginate(10);
         $categories = Category::all();
-       return view('post.index', compact('posts','categories'));
+        return view('post.index', compact('posts','categories'));
     }
 
     /**
@@ -42,15 +38,9 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
 
+        $slug = Str::slug($request->title,'-');
 
-        $slug = strtolower(str_replace(' ','-',$request->title));
-
-        if($request->image == NULL){
-            $imageName = 'blogImg.webp';
-        }else{
-            $imageName = time().'.'.$request->image->getClientOriginalExtension();
-            $request->image->move(public_path('images/photos'), $imageName);
-        }
+        $imageName = $request->image ? time().'.'.$request->image->getClientOriginalExtension():'blogImg.webp';
 
         $fields = [
             'category_id' => $request->category,
@@ -60,14 +50,8 @@ class PostController extends Controller
             'body' => $request->body
         ];
 
-
-        $posts = Auth::user()->posts()->create($fields);
-
+        Auth::user()->posts()->create($fields);
         return redirect()->route('posts.index')->with('success','Post created successfully');
-
-
-
-
     }
 
     /**
@@ -75,6 +59,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        $post = Post::with('users')->findOrFail($post->id);
         return view('post.show',compact('post'));
     }
 
@@ -83,7 +68,10 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('post.edit',compact('post'));
+        $category = Category::all();
+        $post = Post::with('category')->findOrFail($post->id);
+        $post->load('category');
+        return view('post.edit',compact('post','category'));
     }
 
     /**
@@ -91,17 +79,11 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $slug = strtolower(str_replace(' ','-',$request->title));
-
-        if($request->image == NULL){
-            $imageName = $post->image;
-        }else{
-            $imageName = time().'.'.$request->image->getClientOriginalExtension();
-            $request->image->move(public_path('images/photos'), $imageName);
-        }
+        $slug = Str::slug($request->title,'-');
+        $imageName = $request->image ? time().'.'.$request->image->getClientOriginalExtension():'blogImg.webp';
 
         $fields = [
-            'category=id' => $request->category,
+            'category_id' => $request->category,
             'title' => $request->title,
             'slug' => $slug,
             'image' => $imageName,
@@ -109,7 +91,6 @@ class PostController extends Controller
         ];
 
         $post->update($fields);
-
         return redirect()->route('posts.index')->with('success','Post updated successfully');
     }
 

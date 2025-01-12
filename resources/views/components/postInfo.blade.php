@@ -2,6 +2,7 @@
 
 @foreach ($posts as $post )
 <?php
+
     $d = $post->created_at;
     $unix = strtotime($d);
     $date = getDate($unix);
@@ -10,7 +11,8 @@
 ?>
 <div class="blog-slide">
     <div class="img">
-        <img src="{{ asset('images/photos/'. $post->image) }}" alt="">
+
+        <img src="{{ $post->image == 0 ? asset('images/photos/blogImg.webp') : asset('images/photos/'.$post->image) }}" alt="">
         <div class="date">{{ $day }}
             @if (strlen($month) >= 7)
             <span>{{ substr($month, 0, -4) }}</span>
@@ -24,7 +26,7 @@
         <div class="category">{{ $post->category->title }}</div>
         <div class="name">{{ $post->title }}</div>
         <div class="post-info">
-            <span><a href="#"><i class="fa fa-user"></i>info@gmail.com</a></span>
+            <span><a href="#"><i class="fa fa-user"></i>{{ $post->users->email }}</a></span>
             <span><a href="#"><i class="fa fa-tag"></i>Music</a></span>
             <span><a href="#"><i class="fa fa-comments"></i>78  Comment</a></span>
         </div>

@@ -37,8 +37,9 @@
 
                         <div class="input-box">
                             <select name="category" id="">
-                                @foreach ($category as $cat )
-                                    <option value="{{ $cat->id }}">{{ $cat->title }}</option>
+                                <option class="form-control" value="{{ $post->category->id }}">{{ $post->category->title }}</option>
+                                @foreach($category as $cat)
+                                    <option class="form-control" value="{{ $cat->id }}">{{ $cat->title }}</option>
                                 @endforeach
                             </select>
 

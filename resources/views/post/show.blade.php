@@ -1,4 +1,12 @@
 <x-layout>
+    <?php
+
+    $d = $post->created_at;
+    $unix = strtotime($d);
+    $date = getDate($unix);
+    $month = $date['month'];
+    $day = $date['mday'];
+?>
     <section class="banner inner-page">
         <div class="banner-img"><img src="{{ asset('images/banner/blog-details.jpg')}}" alt=""></div>
         <div class="page-title">
@@ -21,8 +29,8 @@
                 <div class="col-md-12">
                     <div class="blog-slide">
                         <div class="img">
-                            <img src="{{ asset('images/photos/'. $post->image)}}" alt="">
-                            <div class="date">12<span>Jan</span></div>
+                            <img src="{{ $post->image == 0 ? asset('images/photos/blogImg.webp') : asset('images/photos/'.$post->image)}}" alt="">
+                            <div class="date">{{ $day }}<span>{{ $month }}</span></div>
                         </div>
                         <div class="info">
                             <div class="category">{{ $post->category->title }}</div>
@@ -40,7 +48,7 @@
                             @endauth
 
                             <div class="post-info">
-                                <span><a href="#"><i class="fa fa-user"></i>{{ $post->user->name}}</a></span>
+                                <span><a href="#"><i class="fa fa-user"></i>{{ $post->users->name}}</a></span>
                                 <span><a href="#"><i class="fa fa-tag"></i>Music</a></span>
                                 <span><a href="#"><i class="fa fa-comments"></i>78  Comment</a></span>
                             </div>

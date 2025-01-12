@@ -17,12 +17,10 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['required','max:255'],
-            'image' => ''
+            'title' => 'required','max:255',
         ]);
 
         Category::create($validated);
-
         return redirect()->route('category.create')->with('success','Category created succesfully');
     }
 }
